@@ -4,6 +4,7 @@ resource "aws_s3_bucket" "web" {
   website {
     index_document = "index.html"
   }
+  force_destroy = true
 }
 
 resource "aws_s3_bucket_policy" "web" {
