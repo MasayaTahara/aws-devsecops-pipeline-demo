@@ -1,5 +1,5 @@
 resource "aws_iam_role" "cicd" {
-  name               = "${var.codebuild_project_name}_role"
+  name               = "${var.codebuild_project_name}-role"
   path               = "/service-role/"
   assume_role_policy = data.aws_iam_policy_document.cicd_assume_role.json
 }
