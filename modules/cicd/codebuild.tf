@@ -24,7 +24,26 @@ resource "aws_codebuild_project" "cicd" {
     }
   }
 
-    artifacts {
+  artifacts {
     type = "NO_ARTIFACTS"
+  }
+}
+
+# You have to authorize CodeBuild with GitHub in AWS console
+# If you do not, you will get following error:
+# Error: error creating CodeBuild Webhook: ResourceNotFoundException: Could not find access token for server type github
+resource "aws_codebuild_webhook" "cicd" {
+  project_name = aws_codebuild_project.cicd.name
+  build_type   = "BUILD"
+
+  filter_group {
+    filter {
+      type    = "EVENT"
+      pattern = "PUSH"
+    }
+    filter {
+      type    = "HEAD_REF"
+      pattern = "main"
+    }
   }
 }
