@@ -1,9 +1,9 @@
-resource "aws_iam_role" "ci" {
+resource "aws_iam_role" "cicd" {
   name               = "CodeBuildRole"
-  assume_role_policy = data.aws_iam_policy_document.ci_assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.cicd_assume_role.json
 }
 
-data "aws_iam_policy_document" "ci_assume_role" {
+data "aws_iam_policy_document" "cicd_assume_role" {
   statement {
     effect  = "Allow"
     actions = ["sts:AssumeRole"]
@@ -14,24 +14,24 @@ data "aws_iam_policy_document" "ci_assume_role" {
   }
 }
 
-resource "aws_iam_role_policy" "ci" {
-  role   = aws_iam_role.ci.name
-  policy = data.aws_iam_policy_document.ci_role.json
+resource "aws_iam_role_policy" "cicd" {
+  role   = aws_iam_role.cicd.name
+  policy = data.aws_iam_policy_document.cicd_role.json
 }
 
-data "aws_iam_policy_document" "ci_role" {
+data "aws_iam_policy_document" "cicd_role" {
   statement {
     sid       = "AllowAccessCodeCommit"
     effect    = "Allow"
     actions   = ["codecommit:*"]
-    resources = ["${var.repository_arn}"]
+    resources = [var.repository_arn]
   }
   statement {
     sid     = "AllowAccessS3"
     effect  = "Allow"
     actions = ["s3:*"]
     resources = [
-      "${var.bucket_arn}",
+      var.bucket_arn,
       "${var.bucket_arn}/*"
     ]
   }

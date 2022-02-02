@@ -31,3 +31,6 @@ override.tf.json
 
 # direnv
 .envrc
+
+# Editor
+.idea

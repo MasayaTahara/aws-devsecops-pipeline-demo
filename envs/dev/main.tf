@@ -10,7 +10,10 @@ module "s3_web" {
 }
 
 module "cicd" {
-  source         = "../../modules/cicd"
-  repository_arn = module.code_repository.repository_arn
-  bucket_arn     = module.s3_web.bucket_arn
+  source                        = "../../modules/cicd"
+  codebuild_project_name        = "devsecops-demo-build"
+  codebuild_project_description = "CodeBuild project for demo"
+  repository_arn                = module.code_repository.repository_arn
+  repository_name               = module.code_repository.repository_name
+  bucket_arn                    = module.s3_web.bucket_arn
 }
