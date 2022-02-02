@@ -8,17 +8,17 @@ variable "codebuild_project_description" {
   description = "CodeBuild Project Description"
 }
 
-variable "repository_arn" {
+variable "repository_url" {
   type        = string
-  description = "Code Repository ARN"
-}
-
-variable "repository_name" {
-  type        = string
-  description = "Code Repository Name"
+  description = "Code Repository URL"
 }
 
 variable "bucket_arn" {
   type        = string
   description = "S3 Bucket ARN"
+}
+
+variable "logs_group_name" {
+  type        = string
+  description = "CloudWatch Logs Group Name for CodeBuild log"
 }

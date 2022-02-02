@@ -1,5 +1,6 @@
 resource "aws_iam_role" "cicd" {
-  name               = "CodeBuildRole"
+  name               = "${var.codebuild_project_name}_role"
+  path               = "/service-role/"
   assume_role_policy = data.aws_iam_policy_document.cicd_assume_role.json
 }
 
@@ -21,18 +22,28 @@ resource "aws_iam_role_policy" "cicd" {
 
 data "aws_iam_policy_document" "cicd_role" {
   statement {
-    sid       = "AllowAccessCodeCommit"
-    effect    = "Allow"
-    actions   = ["codecommit:*"]
-    resources = [var.repository_arn]
-  }
-  statement {
-    sid     = "AllowAccessS3"
-    effect  = "Allow"
-    actions = ["s3:*"]
+    sid    = "AllowAccessS3Web"
+    effect = "Allow"
+    actions = [
+      # TODO: Restrict action
+      "s3:*"
+    ]
     resources = [
       var.bucket_arn,
-      "${var.bucket_arn}/*"
+      "${var.bucket_arn}/*",
+    ]
+  }
+  statement {
+    sid    = "AllowPutLogs"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = [
+      aws_cloudwatch_log_group.cicd.arn,
+      "${aws_cloudwatch_log_group.cicd.arn}:*"
     ]
   }
 }

@@ -1,16 +1,10 @@
 resource "aws_codebuild_project" "cicd" {
-  name = var.codebuild_project_name
-  description = var.codebuild_project_description
+  name         = var.codebuild_project_name
+  description  = var.codebuild_project_description
   service_role = aws_iam_role.cicd.arn
 
-  build_timeout = "5"
+  build_timeout  = "5"
   queued_timeout = "5"
-
-  artifacts {
-    type = "S3"
-    packaging = "NONE"
-    location = var.bucket_arn
-  }
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
@@ -19,7 +13,18 @@ resource "aws_codebuild_project" "cicd" {
   }
 
   source {
-    type = "CODECOMMIT"
-    location = var.repository_name
+    type            = "GITHUB"
+    location        = var.repository_url
+    git_clone_depth = "1"
+  }
+
+  logs_config {
+    cloudwatch_logs {
+      group_name = aws_cloudwatch_log_group.cicd.name
+    }
+  }
+
+    artifacts {
+    type = "NO_ARTIFACTS"
   }
 }
